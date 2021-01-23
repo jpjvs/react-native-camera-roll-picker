@@ -38,10 +38,10 @@ class ImageItem extends Component {
       item, index, selected, selectedMarker, imageMargin, imagesPerRow, ratio
     } = this.props;
 
-    const marker = selectedMarker || (<Image
-      style={[styles.marker, { width: 25, height: 25 }]}
-      source={checkIcon}
-    />);
+    // const marker = selectedMarker || (<Image
+    //   style={[styles.marker, { width: 25, height: 25 }]}
+    //   source={checkIcon}
+    // />);
 
     const { image } = item.node;
 

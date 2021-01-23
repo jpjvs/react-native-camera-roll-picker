@@ -68,7 +68,7 @@ class CameraRollPicker extends Component {
 
     this.renderFooterSpinner = this.renderFooterSpinner.bind(this);
     this.onEndReached = this.onEndReached.bind(this);
-    this.renderRow = this.renderRow.bind(this);
+    // this.renderRow = this.renderRow.bind(this);
     this.selectImage = this.selectImage.bind(this);
     this.renderImage = this.renderImage.bind(this);
   }
@@ -273,31 +273,31 @@ class CameraRollPicker extends Component {
         selectedMarker={selectedMarker}
         imagesPerRow={imagesPerRow}
         containerWidth={containerWidth}
-        onClick={image => this.selectImage.bind(this)(image, index)}
+        onClick={image => this.selectImage(image, index)}
         ratio={ratio}
       />
     );
   }
 
-  renderRow(item, index) { // item is an array of objects
-    const isSelected = item.map((imageItem) => {
-      let imgIndex
-      if (!imageItem) return false;
-      const { uri } = imageItem.node.image;
-      imgIndex = this.props.imagesPerRow * index + arrayObjectIndexOf(this.state.selected, 'uri', uri)
-      return arrayObjectIndexOf(this.state.selected, 'uri', uri) >= 0;
-    });
-    return (<Row
-      rowData={item}
-      isSelected={isSelected}
-      selectImage={image => this.selectImage.bind(this)(image, index)}
-      imagesPerRow={this.props.imagesPerRow}
-      containerWidth={this.props.containerWidth}
-      imageMargin={this.props.imageMargin}
-      selectedMarker={this.props.selectedMarker}
-      ratio={this.props.ratio}
-    />);
-  }
+  // renderRow(item, index) { // item is an array of objects
+  //   const isSelected = item.map((imageItem) => {
+  //     let imgIndex
+  //     if (!imageItem) return false;
+  //     const { uri } = imageItem.node.image;
+  //     imgIndex = this.props.imagesPerRow * index + arrayObjectIndexOf(this.state.selected, 'uri', uri)
+  //     return arrayObjectIndexOf(this.state.selected, 'uri', uri) >= 0;
+  //   });
+  //   return (<Row
+  //     rowData={item}
+  //     isSelected={isSelected}
+  //     selectImage={image => this.selectImage.bind(this)(image, index)}
+  //     imagesPerRow={this.props.imagesPerRow}
+  //     containerWidth={this.props.containerWidth}
+  //     imageMargin={this.props.imageMargin}
+  //     selectedMarker={this.props.selectedMarker}
+  //     ratio={this.props.ratio}
+  //   />);
+  // }
 
   renderFooterSpinner() {
     if (!this.state.noMore) {
