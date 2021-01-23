@@ -205,17 +205,12 @@ class CameraRollPicker extends Component {
       maximum, callback, selectSingleItem, callbackMaximum
     } = this.props;
 
-    console.warn('On Select 1')
-
     let { selected, selectedImages, images } = this.state
     let indexInSelected = selected.indexOf(index)
-
-    console.warn('On Select 2')
 
     if (indexInSelected >= 0) {
       selected.splice(indexInSelected, 1)
 
-      console.warn('On Select 3')
       // remove from selected images
       var indexInSelectedImages = selectedImages
           .map(img => img.uri)
@@ -223,11 +218,9 @@ class CameraRollPicker extends Component {
       selectedImages.splice(indexInSelectedImages, 1)
     } else {
       if (selectSingleItem) {
-        console.warn('On Select 4')
         selected = [index]
         selectedImages = [image]
       } else {
-        console.warn('On Select 5')
         if (selected.length < maximum) {
             selected.push(index)
             selectedImages.push(image)
@@ -238,16 +231,13 @@ class CameraRollPicker extends Component {
       }
     }
 
-    console.warn('On Select 6')
     this.setState({
       selected: selected,
       selectedImages: selectedImages,
       // data: nEveryRow(this.state.images, imagesPerRow),
-    }, () => {
-      console.warn('On Select 7')
     });
 
-    // callback(selected, image);
+    callback(selected, image);
   }
 
   renderImage(item, index) {
