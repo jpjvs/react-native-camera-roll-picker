@@ -159,7 +159,7 @@ class CameraRollPicker extends Component {
 
     if (assets.length > 0) {
       newState.lastCursor = data.page_info.end_cursor;
-      newState.data = nEveryRow(newState.images, this.props.imagesPerRow);
+      // newState.data = nEveryRow(newState.images, this.props.imagesPerRow);
     }
 
     this.setState(newState);
@@ -234,7 +234,7 @@ class CameraRollPicker extends Component {
     this.setState({
       selected,
       selectedImages,
-      data: nEveryRow(this.state.images, imagesPerRow),
+      // data: nEveryRow(this.state.images, imagesPerRow),
     });
 
     callback(selected, image);
