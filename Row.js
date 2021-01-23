@@ -40,6 +40,7 @@ class Row extends PureComponent {
         imagesPerRow={imagesPerRow}
         containerWidth={containerWidth}
         onClick={this.props.selectImage}
+        ratio={this.props.ratio}
       />
     );
   }

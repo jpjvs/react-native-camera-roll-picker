@@ -240,17 +240,18 @@ class CameraRollPicker extends Component {
     callback(selected, image);
   }
 
-  renderImage(item) {
+  renderImage(item, index) {
     const { selected } = this.state;
     const {
       imageMargin,
       selectedMarker,
       imagesPerRow,
       containerWidth,
+      ratio
     } = this.props;
 
     const { uri } = item.node.image;
-    const isSelected = (arrayObjectIndexOf(selected, 'uri', uri) >= 0);
+    const isSelected = selected.indexOf(index) >= 0;
 
     return (
       <ImageItem
@@ -261,25 +262,29 @@ class CameraRollPicker extends Component {
         selectedMarker={selectedMarker}
         imagesPerRow={imagesPerRow}
         containerWidth={containerWidth}
-        onClick={this.selectImage}
+        onClick={image => this.selectImage.bind(this)(image, index)}
+        ratio={ratio}
       />
     );
   }
 
-  renderRow(item) { // item is an array of objects
+  renderRow(item, index) { // item is an array of objects
     const isSelected = item.map((imageItem) => {
+      let imgIndex
       if (!imageItem) return false;
       const { uri } = imageItem.node.image;
+      imgIndex = this.props.imagesPerRow * index + arrayObjectIndexOf(this.state.selected, 'uri', uri)
       return arrayObjectIndexOf(this.state.selected, 'uri', uri) >= 0;
     });
     return (<Row
       rowData={item}
       isSelected={isSelected}
-      selectImage={this.selectImage}
+      selectImage={image => this.selectImage.bind(this)(image, index)}
       imagesPerRow={this.props.imagesPerRow}
       containerWidth={this.props.containerWidth}
       imageMargin={this.props.imageMargin}
       selectedMarker={this.props.selectedMarker}
+      ratio={this.props.ratio}
     />);
   }
 
@@ -318,7 +323,7 @@ class CameraRollPicker extends Component {
         ListFooterComponent={this.renderFooterSpinner}
         initialNumToRender={initialNumToRender}
         onEndReached={this.onEndReached}
-        renderItem={({ item }) => this.renderRow(item)}
+        renderItem={({ item, index }) => this.renderRow(item, index)}
         keyExtractor={item => item[0].node.image.uri}
         data={this.state.data}
         extraData={this.state.selected}
