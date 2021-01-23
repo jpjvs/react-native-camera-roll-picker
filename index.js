@@ -304,7 +304,8 @@ class CameraRollPicker extends Component {
       emptyTextStyle,
       loader,
       listHeader,
-      listEmpty
+      listEmpty,
+      removeClippedSubviews
     } = this.props;
 
     if (this.state.initialLoading) {
@@ -315,18 +316,24 @@ class CameraRollPicker extends Component {
       );
     }
 
-    const flatListOrEmptyText = this.state.data.length > 0 ? (
+    const { images } = this.state
+
+    const flatListOrEmptyText = images.length > 0 ? (
       <FlatList
         style={{ flex: 1 }}
+        numColumns={pageSize}
+        initialNumToRender={initialNumToRender}
+        data={images}
+        removeClippedSubviews={removeClippedSubviews}
+        keyExtractor={(item, index) => `rncrp_item_${index}`}
         ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
         ListFooterComponent={this.renderFooterSpinner}
-        initialNumToRender={initialNumToRender}
         onEndReached={this.onEndReached}
-        renderItem={({ item, index }) => this.renderRow(item, index)}
-        keyExtractor={item => item[0].node.image.uri}
-        data={this.state.data}
-        extraData={this.state.selected}
+        renderItem={({ item, index }) => this.renderItem(item, index)}
+        // keyExtractor={item => item[0].node.image.uri}
+        // data={this.state.data}
+        // extraData={this.state.selected}
       />
     ) : (
       <Text style={[{ textAlign: 'center' }, emptyTextStyle]}>{emptyText}</Text>
@@ -344,6 +351,9 @@ class CameraRollPicker extends Component {
 
 CameraRollPicker.propTypes = {
   initialNumToRender: PropTypes.number,
+  // initialListSize: PropTypes.number,
+  pageSize: PropTypes.number,
+  removeClippedSubviews: PropTypes.bool,
   groupTypes: PropTypes.oneOf([
     'Album',
     'All',
@@ -379,6 +389,8 @@ CameraRollPicker.propTypes = {
 
 CameraRollPicker.defaultProps = {
   initialNumToRender: 5,
+  pageSize: 3,
+  removeClippedSubviews: true,
   groupTypes: 'SavedPhotos',
   maximum: 15,
   imagesPerRow: 3,
