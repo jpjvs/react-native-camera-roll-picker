@@ -239,13 +239,13 @@ class CameraRollPicker extends Component {
     }
 
     console.warn('On Select 6')
-    this.setState({
-      selected: selected,
-      selectedImages: selectedImages,
-      // data: nEveryRow(this.state.images, imagesPerRow),
-    }, () => {
-      console.warn('On Select 7')
-    });
+    // this.setState({
+    //   selected: selected,
+    //   selectedImages: selectedImages,
+    //   // data: nEveryRow(this.state.images, imagesPerRow),
+    // }, () => {
+    //   console.warn('On Select 7')
+    // });
 
     callback(selected, image);
   }
