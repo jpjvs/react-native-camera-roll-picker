@@ -126,7 +126,7 @@ class CameraRollPicker extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.groupName !== this.props.groupName)
-        this.fetch(true)
+      this.fetch(true)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -205,32 +205,40 @@ class CameraRollPicker extends Component {
       maximum, callback, selectSingleItem, callbackMaximum
     } = this.props;
 
+    console.warn('On Select 1')
+
     let { selected, selectedImages, images } = this.state
     let indexInSelected = selected.indexOf(index)
 
-    if (indexInSelected >= 0) {
-        selected.splice(indexInSelected, 1)
+    console.warn('On Select 2')
 
-        // remove from selected images
-        var indexInSelectedImages = selectedImages
-            .map(img => img.uri)
-            .indexOf(images[index].node.image.uri)
-        selectedImages.splice(indexInSelectedImages, 1)
+    if (indexInSelected >= 0) {
+      selected.splice(indexInSelected, 1)
+
+      console.warn('On Select 3')
+      // remove from selected images
+      var indexInSelectedImages = selectedImages
+          .map(img => img.uri)
+          .indexOf(images[index].node.image.uri)
+      selectedImages.splice(indexInSelectedImages, 1)
     } else {
-        if (selectSingleItem) {
-            selected = [index]
-            selectedImages = [image]
+      if (selectSingleItem) {
+        console.warn('On Select 4')
+        selected = [index]
+        selectedImages = [image]
+      } else {
+        console.warn('On Select 5')
+        if (selected.length < maximum) {
+            selected.push(index)
+            selectedImages.push(image)
         } else {
-            if (selected.length < maximum) {
-                selected.push(index)
-                selectedImages.push(image)
-            } else {
-                // maximum
-                if (callbackMaximum) callbackMaximum()
-            }
+            // maximum
+            if (callbackMaximum) callbackMaximum()
         }
+      }
     }
 
+    console.warn('On Select 6')
     this.setState({
       selected: selected,
       selectedImages: selectedImages,
