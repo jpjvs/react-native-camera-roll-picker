@@ -143,7 +143,7 @@ class CameraRollPicker extends Component {
 
   appendImages(data, updated) {
     const assets = data.edges;
-    const newState = {
+    let newState = {
       loadingMore: false,
       initialLoading: false,
     };
@@ -202,7 +202,7 @@ class CameraRollPicker extends Component {
 
   selectImage(image, index) {
     const {
-      maximum, imagesPerRow, callback, selectSingleItem,
+      maximum, callback, selectSingleItem, callbackMaximum
     } = this.props;
 
     let { selected, selectedImages, images } = this.state
@@ -232,8 +232,8 @@ class CameraRollPicker extends Component {
     }
 
     this.setState({
-      selected,
-      selectedImages,
+      selected: selected,
+      selectedImages: selectedImages,
       // data: nEveryRow(this.state.images, imagesPerRow),
     });
 
