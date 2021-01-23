@@ -6,6 +6,8 @@ import {
   Text,
   FlatList,
   ActivityIndicator,
+  PermissionsAndroid,
+  Alert
 } from 'react-native';
 import CameraRoll from "@react-native-community/cameraroll";
 import PropTypes from 'prop-types';
@@ -55,7 +57,8 @@ class CameraRollPicker extends Component {
 
     this.state = {
       images: [],
-      selected: this.props.selected,
+      selectedImages: this.props.selected,
+      selected: [],
       lastCursor: null,
       initialLoading: true,
       loadingMore: false,
@@ -70,8 +73,60 @@ class CameraRollPicker extends Component {
     this.renderImage = this.renderImage.bind(this);
   }
 
+  static _getAlbums = () => {
+    return CameraRoll.getPhotos({
+        first: 10000,
+        assetType: 'Photos'
+    })
+        .then(ress => {
+            return [...new Set(ress.edges.map(a => a.node.group_name))]
+        })
+        .catch(err => {
+            return err
+        })
+  }
+
+  _requestPermission = () => {
+    PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+    )
+        .then(granted => {
+            if (granted) {
+                this.fetch(undefined)
+            } else {
+                Alert.alert(
+                    'Permissão não concedida',
+                    'Sem a permissão de acesso ao armazenamento você não vai conseguir selecionar as fotos!'
+                )
+            }
+        })
+        .catch(err => {
+            Alert.alert(
+                'Permissão não concedida',
+                'Sem a permissão de acesso ao armazenamento você não vai conseguir selecionar as fotos!'
+            )
+        })
+  }
+
   componentWillMount() {
-    this.fetch();
+    if (Platform.OS == 'ios') {
+      this.fetch(undefined)
+    } else {
+        PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+        ).then(granted => {
+            if (granted) {
+                this.fetch(undefined)
+            } else {
+                this._requestPermission()
+            }
+        })
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.groupName !== this.props.groupName)
+        this.fetch(true)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -82,42 +137,47 @@ class CameraRollPicker extends Component {
 
   onEndReached() {
     if (!this.state.noMore) {
-      this.fetch();
+      this.fetch(undefined);
     }
   }
 
-  appendImages(data) {
+  appendImages(data, updated) {
     const assets = data.edges;
     const newState = {
       loadingMore: false,
       initialLoading: false,
     };
 
-    if (!data.page_info.has_next_page) {
-      newState.noMore = true;
+    newState.noMore = !data.page_info.has_next_page
+    if (updated) {
+        newState.selected = []
+        newState.selectedImages = this.props.selected
+        newState.images = [...assets]
+    } else {
+        newState.images = this.state.images.concat(assets)
     }
 
     if (assets.length > 0) {
       newState.lastCursor = data.page_info.end_cursor;
-      newState.images = this.state.images.concat(assets);
       newState.data = nEveryRow(newState.images, this.props.imagesPerRow);
     }
 
     this.setState(newState);
   }
 
-  fetch() {
-    if (!this.state.loadingMore) {
-      this.setState({ loadingMore: true }, () => { this.doFetch(); });
+  fetch(updated) {
+    if (!this.state.loadingMore || updated) {
+      this.setState({ loadingMore: true }, () => { this.doFetch(updated); });
     }
   }
 
-  doFetch() {
-    const { groupTypes, assetType } = this.props;
+  doFetch(updated) {
+    const { groupTypes, groupName, requestAlbums, assetType } = this.props;
 
     const fetchParams = {
-      first: 100,
+      first: 1000,
       groupTypes,
+      groupName,
       assetType,
     };
 
@@ -126,12 +186,18 @@ class CameraRollPicker extends Component {
       delete fetchParams.groupTypes;
     }
 
+    if (!groupName) delete fetchParams.groupName
+
     if (this.state.lastCursor) {
       fetchParams.after = this.state.lastCursor;
     }
 
     CameraRoll.getPhotos(fetchParams)
-      .then(data => this.appendImages(data), e => console.log(e));
+      .then(data => {
+          if (this.state.images.length === 0 && !updated)
+              requestAlbums()
+          this._appendImages(data, updated)
+        }, e => console.log(e));
   }
 
   selectImage(image) {
@@ -265,6 +331,8 @@ CameraRollPicker.propTypes = {
     'PhotoStream',
     'SavedPhotos',
   ]),
+  groupName: PropTypes.string,
+  requestAlbums: PropTypes.func,
   maximum: PropTypes.number,
   assetType: PropTypes.oneOf([
     'Photos',
