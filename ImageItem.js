@@ -58,7 +58,7 @@ class ImageItem extends Component {
           source={{ uri: image.uri }}
           style={{ height: ratio * this.imageSize, width: this.imageSize }}
         />
-        {(selected) ? marker : null}
+        {/* {(selected) ? marker : null} */}
       </TouchableOpacity>
     );
   }
