@@ -298,6 +298,8 @@ class CameraRollPicker extends Component {
       emptyText,
       emptyTextStyle,
       loader,
+      listHeader,
+      listEmpty
     } = this.props;
 
     if (this.state.initialLoading) {
