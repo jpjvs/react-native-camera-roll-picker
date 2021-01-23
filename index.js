@@ -75,52 +75,52 @@ class CameraRollPicker extends Component {
 
   static _getAlbums = () => {
     return CameraRoll.getPhotos({
-        first: 10000,
-        assetType: 'Photos'
+      first: 10000,
+      assetType: 'Photos'
     })
-        .then(ress => {
-            return [...new Set(ress.edges.map(a => a.node.group_name))]
-        })
-        .catch(err => {
-            return err
-        })
+      .then(ress => {
+        return [...new Set(ress.edges.map(a => a.node.group_name))]
+      })
+      .catch(err => {
+        return err
+      })
   }
 
   _requestPermission = () => {
     PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
     )
-        .then(granted => {
-            if (granted) {
-                this.fetch(undefined)
-            } else {
-                Alert.alert(
-                    'Permissão não concedida',
-                    'Sem a permissão de acesso ao armazenamento você não vai conseguir selecionar as fotos!'
-                )
-            }
-        })
-        .catch(err => {
-            Alert.alert(
-                'Permissão não concedida',
-                'Sem a permissão de acesso ao armazenamento você não vai conseguir selecionar as fotos!'
-            )
-        })
+      .then(granted => {
+        if (granted) {
+          this.fetch(undefined)
+        } else {
+          Alert.alert(
+            'Permissão não concedida',
+            'Sem a permissão de acesso ao armazenamento você não vai conseguir selecionar as fotos!'
+          )
+        }
+      })
+      .catch(err => {
+        Alert.alert(
+          'Permissão não concedida',
+          'Sem a permissão de acesso ao armazenamento você não vai conseguir selecionar as fotos!'
+        )
+      })
   }
 
   componentWillMount() {
     if (Platform.OS == 'ios') {
       this.fetch(undefined)
     } else {
-        PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-        ).then(granted => {
-            if (granted) {
-                this.fetch(undefined)
-            } else {
-                this._requestPermission()
-            }
-        })
+      PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+      ).then(granted => {
+        if (granted) {
+          this.fetch(undefined)
+        } else {
+          this._requestPermission()
+        }
+      })
     }
   }
 
@@ -253,6 +253,8 @@ class CameraRollPicker extends Component {
 
     const { uri } = item.node.image;
     const isSelected = selected.indexOf(index) >= 0;
+
+    console.warn('select_state', isSelected, selected, index)
 
     return (
       <ImageItem
