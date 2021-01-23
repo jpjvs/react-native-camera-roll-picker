@@ -305,7 +305,8 @@ class CameraRollPicker extends Component {
       loader,
       listHeader,
       listEmpty,
-      removeClippedSubviews
+      removeClippedSubviews,
+      pageSize
     } = this.props;
 
     if (this.state.initialLoading) {
