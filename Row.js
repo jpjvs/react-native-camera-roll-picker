@@ -34,6 +34,7 @@ class Row extends PureComponent {
       <ImageItem
         key={uri}
         item={item}
+        index={index}
         selected={isSelected}
         imageMargin={imageMargin}
         selectedMarker={selectedMarker}
