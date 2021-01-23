@@ -196,7 +196,7 @@ class CameraRollPicker extends Component {
       .then(data => {
           if (this.state.images.length === 0 && !updated)
               requestAlbums()
-          this._appendImages(data, updated)
+          this.appendImages(data, updated)
         }, e => console.log(e));
   }
 
