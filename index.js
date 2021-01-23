@@ -200,27 +200,40 @@ class CameraRollPicker extends Component {
         }, e => console.log(e));
   }
 
-  selectImage(image) {
+  selectImage(image, index) {
     const {
       maximum, imagesPerRow, callback, selectSingleItem,
     } = this.props;
 
-    const { selected } = this.state;
-    const index = arrayObjectIndexOf(selected, 'uri', image.uri);
+    let { selected, selectedImages, images } = this.state
+    let indexInSelected = selected.indexOf(index)
 
-    if (index >= 0) {
-      selected.splice(index, 1);
+    if (indexInSelected >= 0) {
+        selected.splice(indexInSelected, 1)
+
+        // remove from selected images
+        var indexInSelectedImages = selectedImages
+            .map(img => img.uri)
+            .indexOf(images[index].node.image.uri)
+        selectedImages.splice(indexInSelectedImages, 1)
     } else {
-      if (selectSingleItem) {
-        selected.splice(0, selected.length);
-      }
-      if (selected.length < maximum) {
-        selected.push(image);
-      }
+        if (selectSingleItem) {
+            selected = [index]
+            selectedImages = [image]
+        } else {
+            if (selected.length < maximum) {
+                selected.push(index)
+                selectedImages.push(image)
+            } else {
+                // maximum
+                if (callbackMaximum) callbackMaximum()
+            }
+        }
     }
 
     this.setState({
       selected,
+      selectedImages,
       data: nEveryRow(this.state.images, imagesPerRow),
     });
 
@@ -298,6 +311,8 @@ class CameraRollPicker extends Component {
     const flatListOrEmptyText = this.state.data.length > 0 ? (
       <FlatList
         style={{ flex: 1 }}
+        ListHeaderComponent={listHeader}
+        ListEmptyComponent={listEmpty}
         ListFooterComponent={this.renderFooterSpinner}
         initialNumToRender={initialNumToRender}
         onEndReached={this.onEndReached}
@@ -350,6 +365,9 @@ CameraRollPicker.propTypes = {
   emptyText: PropTypes.string,
   emptyTextStyle: Text.propTypes.style,
   loader: PropTypes.node,
+  callbackMaximum: PropTypes.func,
+  listEmpty: PropTypes.func || PropTypes.element || PropTypes.node,
+  listHeader: PropTypes.func || PropTypes.element || PropTypes.node
 };
 
 CameraRollPicker.defaultProps = {
@@ -367,6 +385,10 @@ CameraRollPicker.defaultProps = {
     console.log(selectedImages);
   },
   emptyText: 'No photos.',
+  ratio: 1,
+  callbackMaximum: function () {
+      console.log('You have already selected all the photos allowed')
+  }
 };
 
 export default CameraRollPicker;
