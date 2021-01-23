@@ -329,8 +329,8 @@ class CameraRollPicker extends Component {
         keyExtractor={(item, index) => `rncrp_item_${index}`}
         ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
-        ListFooterComponent={this.renderFooterSpinner}
-        onEndReached={this.onEndReached}
+        ListFooterComponent={this.renderFooterSpinner.bind(this)}
+        onEndReached={this.onEndReached.bind(this)}
         renderItem={({ item, index }) => this.renderImage(item, index)}
         // keyExtractor={item => item[0].node.image.uri}
         // data={this.state.data}
@@ -342,7 +342,7 @@ class CameraRollPicker extends Component {
 
     return (
       <View
-        style={[styles.wrapper, { padding: imageMargin, paddingRight: 0, backgroundColor }]}
+        style={[styles.wrapper, { paddingRight: 0, backgroundColor }]}
       >
         {flatListOrEmptyText}
       </View>
