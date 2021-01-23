@@ -237,7 +237,7 @@ class CameraRollPicker extends Component {
       // data: nEveryRow(this.state.images, imagesPerRow),
     });
 
-    callback(selected, image);
+    if (callback) callback(selectedImages, image);
   }
 
   renderImage(item, index) {
