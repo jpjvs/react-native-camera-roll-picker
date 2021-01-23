@@ -179,6 +179,7 @@ class CameraRollPicker extends Component {
       groupTypes,
       groupName,
       assetType,
+      include: ['imageSize']
     };
 
     if (Platform.OS === 'android') {
@@ -194,10 +195,10 @@ class CameraRollPicker extends Component {
 
     CameraRoll.getPhotos(fetchParams)
       .then(data => {
-          if (this.state.images.length === 0 && !updated)
-              requestAlbums()
-          this.appendImages(data, updated)
-        }, e => console.log(e));
+        if (this.state.images.length === 0 && !updated)
+          requestAlbums()
+        this.appendImages(data, updated)
+      }, e => console.log(e));
   }
 
   selectImage(image, index) {
@@ -213,8 +214,8 @@ class CameraRollPicker extends Component {
 
       // remove from selected images
       var indexInSelectedImages = selectedImages
-          .map(img => img.uri)
-          .indexOf(images[index].node.image.uri)
+        .map(img => img.uri)
+        .indexOf(images[index].node.image.uri)
       selectedImages.splice(indexInSelectedImages, 1)
     } else {
       if (selectSingleItem) {
@@ -222,11 +223,11 @@ class CameraRollPicker extends Component {
         selectedImages = [image]
       } else {
         if (selected.length < maximum) {
-            selected.push(index)
-            selectedImages.push(image)
+          selected.push(index)
+          selectedImages.push(image)
         } else {
-            // maximum
-            if (callbackMaximum) callbackMaximum()
+          // maximum
+          if (callbackMaximum) callbackMaximum()
         }
       }
     }
