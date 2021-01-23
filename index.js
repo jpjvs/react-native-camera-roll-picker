@@ -243,6 +243,8 @@ class CameraRollPicker extends Component {
       selected: selected,
       selectedImages: selectedImages,
       // data: nEveryRow(this.state.images, imagesPerRow),
+    }, () => {
+      console.warn('On Select 7')
     });
 
     callback(selected, image);
@@ -406,6 +408,7 @@ CameraRollPicker.defaultProps = {
   imagesPerRow: 3,
   imageMargin: 5,
   selectSingleItem: false,
+  selectedMarker: undefined,
   assetType: 'Photos',
   backgroundColor: 'white',
   selected: [],
