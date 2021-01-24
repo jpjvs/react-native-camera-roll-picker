@@ -243,9 +243,8 @@ class CameraRollPicker extends Component {
       // data: nEveryRow(this.state.images, imagesPerRow),
     }, () => {
       console.warn('On Select 5', this.state.selectedImages, this.state.selected)
+      if (callback) callback(selectedImages, image)
     });
-
-    if (callback) callback(selectedImages, image);
   }
 
   renderImage(item, index) {
