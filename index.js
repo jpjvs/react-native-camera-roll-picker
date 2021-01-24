@@ -189,7 +189,7 @@ class CameraRollPicker extends Component {
 
     if (!groupName) delete fetchParams.groupName
 
-    if (this.state.lastCursor) {
+    if (this.state.lastCursor && !updated) {
       fetchParams.after = this.state.lastCursor;
     }
 
