@@ -213,7 +213,7 @@ class CameraRollPicker extends Component {
       selected.splice(indexInSelected, 1)
 
       // remove from selected images
-      var indexInSelectedImages = selectedImages
+      let indexInSelectedImages = selectedImages
         .map(img => img.uri)
         .indexOf(images[index].node.image.uri)
       selectedImages.splice(indexInSelectedImages, 1)
@@ -235,12 +235,14 @@ class CameraRollPicker extends Component {
       }
     }
 
+    console.warn('On Select 4', selectedImages, selected)
+
     this.setState({
       selected: selected,
       selectedImages: selectedImages,
       // data: nEveryRow(this.state.images, imagesPerRow),
     }, () => {
-      console.warn('On Select 4', this.state.selectedImages, this.state.selected)
+      console.warn('On Select 5', this.state.selectedImages, this.state.selected)
     });
 
     if (callback) callback(selectedImages, image);
