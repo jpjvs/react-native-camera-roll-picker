@@ -335,7 +335,7 @@ class CameraRollPicker extends Component {
         ListEmptyComponent={listEmpty}
         ListFooterComponent={this.renderFooterSpinner.bind(this)}
         onEndReached={this.onEndReached.bind(this)}
-        renderItem={({ item, index }) => this.renderImage(item, index)}
+        renderItem={({ item, index }) => this.renderImage.bind(this)(item, index)}
         // keyExtractor={item => item[0].node.image.uri}
         // data={this.state.data}
         // extraData={this.state.selected}
